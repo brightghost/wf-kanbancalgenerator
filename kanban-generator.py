@@ -6,27 +6,30 @@ import subprocess
 
 def run():
     # generate a formatted calendar from arguments provided on command line
+    script_name = sys.argv[0]
     for a in sys.argv:
         if a == "--help" or a == "-h":
             # a help flag found anywhere prints usage and exits
             print('''Usage:
 
-                kanban-generator.py
+                {0}
                     Default: generate 12 month's of formatted calendar from today's date
-                kanban-generator.py 2020-2-5
+
+                {0} 2020-2-5
                     Generate a formatted calendar starting at today's date and ending at the provided date
-                kanban-generator.py 2020-2-5 2020-2-28
+
+                {0} 2020-2-5 2020-2-28
                     Generate a formatted calendar encompassing the start and end dates provided.
 
-                kanban-generator.py (-h|--help)
+                {0} (-h|--help)
                     Print this usage information and exit
 
-                ''')
+                '''.format(script_name))
             sys.exit(0)
     if len(sys.argv) == 3:
         # kanban-generator ISO-start-date ISO-end-date
-        print("argv - ", str(sys.argv[1]))
-        start_date = kbDate.fromisoformat(sys.argv[1])
+        print("argv[1] - ", str(sys.argv[1]))
+        start_date = kbDate.fromisoformat(str(sys.argv[1]))
         end_date = kbDate.fromisoformat(sys.argv[2])
     elif len(sys.argv) == 2:
         # kanban-generator ISO-end-date
@@ -93,9 +96,21 @@ class kbDate(dt.date):
     def __init__(self, *args, **kwargs):
         # super(kbDate, self).__init__()
         self.weekday_names = [
-#            "M","Tu","W","Th","F","St","Sn"]
-#            "m","t","w","th","f","st","s"]
+        #   "M","Tu","W","Th","F","St","Sn"]
+        #   "m","t","w","th","f","st","s"]
             "Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+
+    @classmethod
+    def fromisoformat(self, isodate):
+        '''Returns a kbDate generated from the provided isodate (YYYY-MM-DD)'''
+        # datetime.date.fromisoformat() : new in python3.7
+        print("type self: ", type(self))
+        # strptime returns a datetime
+        self.date_obj = dt.datetime.strptime(isodate, "%Y-%m-%d").date()
+
+        # return type(self)(self.date_obj.year, self.date_obj.month, self.date_obj.day)
+        return self(self.date_obj.year, self.date_obj.month, self.date_obj.day)
+
 
     #https://stackoverflow.com/a/20288506/2920201
     def __add__(self, other):
@@ -125,14 +140,6 @@ class kbDate(dt.date):
             '''
         return("<b><i>#" + str(self.month) + "-" + str(self.day) + " " + self.get_dow_string() + "</i></b>")
 
-    def fromisoformat(self, isodate):
-        '''Returns a kbDate generated from the provided isodate (YYYY-MM-DD)'''
-        # datetime.date.fromisoformat() : new in python3.7
-
-        # strptime returns a datetime
-        date_obj = dt.strptime(isodate, "%Y-%m-%d").date()
-
-        return type(self)(date_obj.year, date_obj.month, date_obj.day)
 
 if __name__ == "__main__":
     run()
