@@ -1,7 +1,10 @@
 # wf-kanbancalgenerator
-Utility to generate formatted calendar lists for Workflowy-like organizers
+v.0.1
+Utility to generate formatted calendar lists for Workflowy-like organizers.
 
-Note: despite the name, there's nothing really Kanban-specific about the generated calendar lists. Inspired by [WorkFlowy Academy | The Kanban Calendar](https://www.youtube.com/watch?v=cPkWhwv3KMU). The utility outputs raw HTML to the console and, on Linux, will copy the html to the clipboard in a format that can be pasted with formatting directly into Workflowy.
+Note: this was inspired by Inspired by [WorkFlowy Academy | The Kanban Calendar](https://www.youtube.com/watch?v=cPkWhwv3KMU) and despite the name, there's nothing really Kanban-specific about the generated calendar lists. They should be useful to anyone who uses a manually-populated calendar for task organization in Workflowy or a similar utility that supports formatted text. The utility outputs raw HTML to the console and, on Linux, will copy this HTML to the clipboard in a format that can be pasted with formatting directly into Workflowy.
+
+If I ever get around to it someday I'll re-write this as a browser-based app with support for customizing the output format, but first I need to use it it long enough to convince myself it's useful. :)
 
 Sample of the format:
 
