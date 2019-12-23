@@ -1,8 +1,8 @@
 #! /bin/python3
-
 import datetime as dt
 import sys
 import subprocess
+
 
 def run():
     # generate a formatted calendar from arguments provided on command line
@@ -28,12 +28,10 @@ def run():
             sys.exit(0)
     if len(sys.argv) == 3:
         # kanban-generator ISO-start-date ISO-end-date
-        print("argv[1] - ", str(sys.argv[1]))
         start_date = kbDate.fromisoformat(str(sys.argv[1]))
         end_date = kbDate.fromisoformat(sys.argv[2])
     elif len(sys.argv) == 2:
         # kanban-generator ISO-end-date
-        #   generates a calendar from today--ISO-end-date
         start_date = kbDate.today()
         end_date = kbDate.fromisoformat(sys.argv[1])
     elif len(sys.argv) == 1:
@@ -47,6 +45,7 @@ def run():
     print_date_array(arr)
     copy_date_array(arr)
 
+    
 def create_date_array(start_date, end_date):
     output_arr = []
     d = start_date
@@ -54,15 +53,14 @@ def create_date_array(start_date, end_date):
     last_mo = None
     last_yr = None
 
-    ### assemble the output array ###
-
-    # first mo header:
-    # output_arr.append(d.get_month_string())
+    ## assemble the output array ##
     while d <= end_date:
         assert isinstance(d, kbDate)
+        # yr header
         if d.year != last_yr:
             output_arr.append(d.get_year_string())
             last_yr = d.year
+        # mo header    
         if d.month != last_mo:
             output_arr.append(d.get_month_string())
             last_mo = d.month
@@ -71,11 +69,13 @@ def create_date_array(start_date, end_date):
         d = d + dt.timedelta(1) # increment day
     return output_arr
 
+
 def print_date_array(array):
     '''Prints date array to terminal.'''
     for i in array:
         print(i)
 
+        
 def copy_date_array(array):
     # https://stackoverflow.com/a/51977242/2920201
     ''' testing shows workflowy ui likes html:
@@ -93,6 +93,8 @@ def copy_date_array(array):
 
 class kbDate(dt.date):
     """A date object with methods for printing in our preferred format."""
+    
+    
     def __init__(self, *args, **kwargs):
         # super(kbDate, self).__init__()
         self.weekday_names = [
@@ -100,15 +102,14 @@ class kbDate(dt.date):
         #   "m","t","w","th","f","st","s"]
             "Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
 
+    
     @classmethod
     def fromisoformat(self, isodate):
+        # mock datetime.date.fromisoformat() (new in py3.7)
         '''Returns a kbDate generated from the provided isodate (YYYY-MM-DD)'''
-        # datetime.date.fromisoformat() : new in python3.7
         print("type self: ", type(self))
         # strptime returns a datetime
         self.date_obj = dt.datetime.strptime(isodate, "%Y-%m-%d").date()
-
-        # return type(self)(self.date_obj.year, self.date_obj.month, self.date_obj.day)
         return self(self.date_obj.year, self.date_obj.month, self.date_obj.day)
 
 
@@ -117,26 +118,26 @@ class kbDate(dt.date):
          res = super(kbDate, self).__add__(other)
          return type(self)(res.year, res.month, res.day)
 
+    
     def get_dow_string(self):
         '''Return a formatted string representating of the day of week.'''
         return self.weekday_names[self.weekday()]
 
+    
     def get_year_string(self):
         '''Return a formatted string for the year header of this object.'''
         return "<b>" + self.strftime("%Y") + "</b>"
 
+    
     def get_month_string(self):
         '''Return a formatted string for the month header of this object.'''
         return "<b>" + self.strftime("%B") + "</b>"
 
+    
     def get_date_string(self):
         '''Return a formatted string for the date listing of this object.
         Ex:
             #12-19 Th
-            #12-20 F
-            #12-21 St
-            #12-22 Sn
-            #12-23 M
             '''
         return("<b><i>#" + str(self.month) + "-" + str(self.day) + " " + self.get_dow_string() + "</i></b>")
 
